@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <lr_log_cleaner>
+            <general>
+                <enabled>0</enabled>
+                <retention_days>90</retention_days>
+                <backup_before_delete>0</backup_before_delete>
+                <backup_retention_days>30</backup_retention_days>
+            </general>
+        </lr_log_cleaner>
+    </default>
+</config>

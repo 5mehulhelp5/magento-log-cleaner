@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="logicrays_config" translate="label" sortOrder="10">
+            <label>Logicrays</label>
+        </tab>
+        <section id="lr_log_cleaner" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Log Cleaner</label>
+            <tab>logicrays_config</tab>
+            <resource>LR_LogCleaner::logcleaner_config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Configuration</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Enable Log Cleaner</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable the automatic log cleaning functionality.</comment>
+                </field>
+
+                <field id="retention_days" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Log Entry Retention Period (Days)</label>
+                    <validate>required-entry validate-digits validate-greater-than-zero</validate>
+                    <comment>Number of days to keep log entries. Default is 90 days (3 months). Older log entries will be removed from files.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="log_files" translate="label comment" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Log Files to Clean</label>
+                    <source_model>LR\LogCleaner\Model\Config\Source\LogFiles</source_model>
+                    <comment>Select which log files to clean old entries from. Leave empty to clean all log files.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="backup_before_delete" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Backup Before Cleaning</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Create compressed backup of original log files before cleaning old entries. Backups will be stored in var/log/backup/.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="backup_retention_days" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Backup Retention Period (Days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Number of days to keep backup files. Default is 30 days. Set to 0 to keep backups indefinitely.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="backup_before_delete">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="schedule" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cleanup Schedule</label>
+
+                <field id="info" translate="label" type="label" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Schedule Information</label>
+                    <comment><![CDATA[
+                        <div style="padding: 10px; background: #f8f8f8; border: 1px solid #ddd; border-radius: 4px;">
+                            <strong>Current Schedule:</strong> Every 2 hours (0 */2 * * *)<br/>
+                            <strong>Runs At:</strong> 00:00, 02:00, 04:00, 06:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00, 20:00, 22:00<br/>
+                            <strong>Next Run:</strong> Check Magento Cron jobs for exact timing<br/>
+                            <strong>Last Run:</strong> Check var/log/system.log for LR_LogCleaner entries
+                        </div>
+                    ]]></comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
