@@ -5,25 +5,45 @@ A comprehensive Magento 2 module for automatic log entry cleanup with advanced p
 ## 🔧 Features
 
 • **Automated Schedule**: Runs every 2 hours via Magento cron job (0 */2 * * *)
+
 • **File Discovery**: Scans `/var/log/` directory for all `.log` files automatically
+
 • **Date Pattern Recognition**: Identifies log entry timestamps using regex patterns for multiple formats
+
 • **Retention Calculation**: Compares entry dates against configurable retention period (default 90 days)
+
 • **Entry-Level Cleaning**: Removes old log entries from within files while preserving recent ones
+
 • **Multi-Line Support**: Handles complete log entries that span multiple lines (stack traces, JSON objects)
+
 • **Intelligent Processing**: Automatically switches between standard mode (<50MB) and batch mode (>50MB)
+
 • **Batch Processing**: Processes large files in chunks of 100 entries with 300 batch limit for performance
+
 • **Memory Management**: Uses stream processing with real-time monitoring and garbage collection
+
 • **Backup Creation**: Optionally creates compressed gzip backups before cleaning (if enabled)
+
 • **Progress Tracking**: Reports both "processed" (evaluated) and "removed" (deleted) entry counts
+
 • **Early Stopping**: Terminates batch processing when no old entries found in consecutive batches
-• **Admin Configuration**: Controlled via admin panel under Stores > Configuration > Cell Israel Config
+
+• **Admin Configuration**: Controlled via admin panel under Stores > Configuration > Logicrays
+
 • **Console Interface**: Manual execution available via `bin/magento lr:logs:clean` command
+
 • **Dry Run Mode**: Preview changes with `--dry-run` flag without making actual modifications
+
 • **Comprehensive Logging**: Records all operations to system.log with detailed statistics
+
 • **Backup Cleanup**: Automatically removes old backup files based on backup retention period
+
 • **ACL Security**: Protected by admin permissions (`LR_LogCleaner::logcleaner_config`)
+
 • **Error Handling**: Graceful failure with proper exception logging and rollback capabilities
+
 • **Performance Protection**: Maximum processing limits prevent system overload on very large files
+
 
 ## Overview
 
