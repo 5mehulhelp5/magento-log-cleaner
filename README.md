@@ -2,19 +2,28 @@
 
 A comprehensive Magento 2 module for automatic log entry cleanup with advanced performance optimizations, intelligent batch processing, and configurable retention periods. **This module cleans old log entries from within log files, preserving recent entries while removing outdated ones.**
 
-## 🚀 Latest Updates (v2.1.0)
+## 🔧 Features
 
-### ⚡ **Performance Optimizations**
-- **50MB Batch Threshold**: Reduced from 100MB to 50MB for better performance coverage
-- **100 Entries Per Batch**: Increased from 50 to 100 entries for improved processing efficiency
-- **Enhanced Memory Management**: Real-time monitoring and automatic garbage collection
-- **2-Hour Cron Schedule**: Changed from daily to every 2 hours for more frequent cleanup
-
-### 📊 **Improved Progress Reporting**
-- **Clear Entry Distinction**: Shows "processed" vs "removed" entries separately
-- **Batch Progress**: Real-time feedback with memory usage monitoring
-- **Early Stopping Notifications**: Clear messages when batch limits are reached
-- **Multi-point Estimation**: More accurate dry run predictions using advanced sampling
+• **Automated Schedule**: Runs every 2 hours via Magento cron job (0 */2 * * *)
+• **File Discovery**: Scans `/var/log/` directory for all `.log` files automatically
+• **Date Pattern Recognition**: Identifies log entry timestamps using regex patterns for multiple formats
+• **Retention Calculation**: Compares entry dates against configurable retention period (default 90 days)
+• **Entry-Level Cleaning**: Removes old log entries from within files while preserving recent ones
+• **Multi-Line Support**: Handles complete log entries that span multiple lines (stack traces, JSON objects)
+• **Intelligent Processing**: Automatically switches between standard mode (<50MB) and batch mode (>50MB)
+• **Batch Processing**: Processes large files in chunks of 100 entries with 300 batch limit for performance
+• **Memory Management**: Uses stream processing with real-time monitoring and garbage collection
+• **Backup Creation**: Optionally creates compressed gzip backups before cleaning (if enabled)
+• **Progress Tracking**: Reports both "processed" (evaluated) and "removed" (deleted) entry counts
+• **Early Stopping**: Terminates batch processing when no old entries found in consecutive batches
+• **Admin Configuration**: Controlled via admin panel under Stores > Configuration > Cell Israel Config
+• **Console Interface**: Manual execution available via `bin/magento lr:logs:clean` command
+• **Dry Run Mode**: Preview changes with `--dry-run` flag without making actual modifications
+• **Comprehensive Logging**: Records all operations to system.log with detailed statistics
+• **Backup Cleanup**: Automatically removes old backup files based on backup retention period
+• **ACL Security**: Protected by admin permissions (`LR_LogCleaner::logcleaner_config`)
+• **Error Handling**: Graceful failure with proper exception logging and rollback capabilities
+• **Performance Protection**: Maximum processing limits prevent system overload on very large files
 
 ## Overview
 
@@ -94,7 +103,9 @@ The LR_LogCleaner module automatically manages Magento log files by removing old
 
 ### Admin Panel Setup
 
-Navigate to **Stores > Configuration > Cell Israel Config > Log Cleaner**
+Navigate to **Stores > Configuration > Logicrays > Log Cleaner**
+
+![Magento Admin Configuration](view/web/images/Magento_Admin_Stores_Configuration_Settings.png)
 
 #### General Settings
 - **Enable Log Cleaner**: Toggle automatic log entry cleaning on/off
@@ -136,6 +147,8 @@ bin/magento lr:logs:clean -d
 - **Use Case**: Test configuration before running actual cleanup
 - **Output**: Shows which files would be processed and how many entries would be removed
 
+![lr logs clean dry-run cli output](view/web/images/lr_log_clean-dry_run-cli-output.png)
+
 #### Normal Execution
 ```bash
 bin/magento lr:logs:clean
@@ -143,6 +156,8 @@ bin/magento lr:logs:clean
 - **Purpose**: Execute actual log entry cleanup
 - **Use Case**: Manual cleanup or testing changes immediately
 - **Output**: Real-time feedback with file processing and entry removal counts
+
+![lr logs clean cli output](view/web/images/lr_log_clean-cli-output.png)
 
 ### Command Output Examples
 
@@ -468,7 +483,6 @@ chmod 644 /var/log/backup/*.gz
 ### Required Magento Modules
 - `Magento_Cron` - For automated daily scheduling
 - `Magento_Config` - For admin configuration system
-- `LR_ProvisionOrder` - For shared admin tab (`logicrays_config`)
 
 ### PHP Requirements
 - **PHP 8.1+** with required extensions:
@@ -505,51 +519,6 @@ chmod 644 /var/log/backup/*.gz
 - **Disk Space Management**: Regular cleanup prevents log directory growth
 - **Temporary Files**: Batch processing uses temporary files that are automatically cleaned up
 
-## Version History
-
-### Version 2.1.0 - Performance & UX Improvements
-**Major Enhancements**:
-- **Enhanced Batch Processing**: Reduced threshold from 100MB to 50MB for better performance coverage
-- **Improved Efficiency**: Increased batch size from 50 to 100 entries per batch
-- **Frequent Maintenance**: Updated cron schedule from daily to every 2 hours (0 */2 * * *)
-- **Clear Progress Reporting**: Separated "processed" vs "removed" entry counts to eliminate confusion
-- **Advanced Memory Management**: Real-time monitoring and automatic garbage collection every 5 batches
-- **Multi-point Estimation**: More accurate dry run predictions using beginning, middle, and end sampling
-- **Early Stopping Logic**: Intelligent batch termination when no old entries found
-- **Performance Protection**: Maximum 300 batch limit (30,000 entries) for very large files
-
-**User Experience Improvements**:
-- **Clearer CLI Output**: Distinguished between entries processed vs entries removed
-- **Real-time Feedback**: Batch progress indicators with memory usage monitoring
-- **Better Documentation**: Comprehensive examples explaining the processing logic
-- **Enhanced Error Messages**: More descriptive feedback for troubleshooting
-
-### Version 1.0.0 - Initial Release
-**Core Features**:
-- Daily cron-based log entry cleanup
-- Content-based cleaning (preserves recent entries)
-- Multi-line log entry support
-- Advanced date pattern recognition
-- Optional compressed backup functionality
-- Rich console command interface with dry-run mode
-- Complete admin configuration panel
-- ACL integration and permissions
-- Accurate entry counting system
-- Comprehensive error handling and logging
-
-**Technical Highlights**:
-- Magento 2.4.4+ compatibility
-- PHP 8.1+ support with strict types
-- Dynamic log file discovery
-- Intelligent multi-line entry parsing
-- Gzip backup compression
-- Emoji-rich console output
-- Proper dependency injection
-- Module dependency management
-- Batch processing for large files (>10MB)
-- Stream-based processing for memory optimization
-- Automatic processing mode selection
-- Real-time progress indicators
 
 ## Advanced Usage
 
@@ -591,3 +560,7 @@ The module is designed to work alongside other log management solutions:
 4. **System Resources**: Monitor memory and disk usage during cleanup
 
 This comprehensive log cleaner module provides efficient, safe, and configurable log entry management for Magento 2 applications, ensuring optimal performance while preserving important log history.
+
+## Changelog
+
+For detailed version history and release notes, see [CHANGELOG.md](CHANGELOG.md).
